@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <script src="https://d19p4zemcycm7a.cloudfront.net/w2/auth0-widget-2.4.0.min.js"></script>
+    <script type="text/javascript">
+      
+      var widget = new Auth0Widget({
+        domain:         'fh-dan.auth0.com',
+        clientID:       'RngC3hcOfp7nUqea9yF3IvNZimkJt3Z4',
+        callbackURL:    'http://127.0.0.1:3000/callback'
+      });
+      
+    </script>
+    <button onclick="widget.signin()">Login</button>
+  </body>
+</html>

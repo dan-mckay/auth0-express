@@ -7,6 +7,8 @@ var express = require('express');
 var routes = require('./routes');
 var http = require('http');
 var path = require('path');
+var passport = require('passport');
+var Auth0Strategy = require('passport-auth0');
 
 var app = express();
 
@@ -20,7 +22,9 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
-app.use(express.session());
+app.use(express.session({ secret: 'shhhhhhhhh' }));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -29,7 +33,29 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
+// app.get('/', routes.index);
+// app.get('/callback', routes.callback);
+
+app.get('/', function(req, res) {
+  res.render('index', { 
+    title: 'Login Auth0 Test App',
+    user: req.user
+  });
+});
+app.get('/login', function(req, res) {
+  res.render('login', { 
+    title: 'Login Auth0 Test App',
+  });
+});
+// Auth0 callback handler
+app.get('/callback', passport.authenticate('auth0', { failureRedirect: '/url-if-something-fails' }), 
+  function(req, res) {
+    if (!req.user) {
+      throw new Error('user null');
+    }
+    res.redirect("/");
+  }
+);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
