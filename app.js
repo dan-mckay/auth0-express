@@ -7,7 +7,8 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var passport = require('passport');
-var Auth0Strategy = require('passport-auth0');
+var strategy = require('./lib/setup-passport');
+var fs = require('fs');
 
 var app = express();
 
@@ -32,20 +33,19 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-// app.get('/', routes.index);
-// app.get('/callback', routes.callback);
-
 app.get('/', function(req, res) {
   res.render('index', { 
     title: 'Login Auth0 Test App',
-    user: req.user
+    user: req.session.passport.user
   });
 });
+
 app.get('/login', function(req, res) {
   res.render('login', { 
     title: 'Login Auth0 Test App',
   });
 });
+
 // Auth0 callback handler
 app.get('/callback', passport.authenticate('auth0', { failureRedirect: '/url-if-something-fails' }), 
   function(req, res) {
