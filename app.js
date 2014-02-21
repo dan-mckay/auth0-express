@@ -33,14 +33,14 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', function(req, res) {
+app.get('/loggedin', function(req, res) {
   res.render('index', { 
     title: 'Login Auth0 Test App',
     user: req.session.passport.user
   });
 });
 
-app.get('/login', function(req, res) {
+app.get('/', function(req, res) {
   res.render('login', { 
     title: 'Login Auth0 Test App',
   });
@@ -52,7 +52,7 @@ app.get('/callback', passport.authenticate('auth0', { failureRedirect: '/url-if-
     if (!req.user) {
       throw new Error('user null');
     }
-    res.redirect("/");
+    res.redirect("/loggedin");
   }
 );
 
